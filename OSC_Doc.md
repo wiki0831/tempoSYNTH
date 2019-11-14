@@ -38,6 +38,7 @@ This function allows user to preview sound when they reach controller to the sou
   This function sends clock ticks to Unitmmm, n$,m,,mm $y, I.E. 1,2,3,4, or 1,2,3....16 (I think this could be done in a differentway)
     - i: the location of clock tick
 
-- ```/file string sampleName```
+- ```/file (string sampleName) (int min) (int max)```
 This function is called at every start of the environment, it parses the sound sample folder and send it to unity so it can populate sound samples dynamically.
     - sampleName: the name of sound sample from folder.
+    - min: the minimum range of MIDI notes
