@@ -4,7 +4,7 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 0,
-			"revision" : 3,
+			"revision" : 8,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
@@ -68,7 +68,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
-					"patching_rect" : [ 6.0, 240.0, 135.0, 22.0 ],
+					"patching_rect" : [ 25.5, 225.9285888671875, 135.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"embed" : 0
 					}
@@ -211,7 +211,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 780.0, 571.5712890625, 128.0, 22.0 ],
-					"text" : "MD_QuiteASpeech"
+					"text" : "Kick"
 				}
 
 			}
@@ -418,14 +418,14 @@
 					"patching_rect" : [ 850.0, 934.8572998046875, 136.0, 30.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
+							"parameter_type" : 0,
+							"parameter_unitstyle" : 4,
 							"parameter_mmin" : -70.0,
 							"parameter_longname" : "live.gain~",
 							"parameter_initial_enable" : 1,
 							"parameter_mmax" : 6.0,
 							"parameter_initial" : [ -12 ],
-							"parameter_shortname" : "live.gain~",
-							"parameter_type" : 0,
-							"parameter_unitstyle" : 4
+							"parameter_shortname" : "live.gain~"
 						}
 
 					}
@@ -449,14 +449,14 @@
 					"patching_rect" : [ 850.0, 783.9285888671875, 53.0, 23.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
+							"parameter_type" : 3,
 							"parameter_mmin" : 1.0,
 							"parameter_longname" : "number",
 							"parameter_initial_enable" : 1,
 							"parameter_invisible" : 1,
 							"parameter_mmax" : 8.0,
 							"parameter_initial" : [ 1 ],
-							"parameter_shortname" : "number",
-							"parameter_type" : 3
+							"parameter_shortname" : "number"
 						}
 
 					}
@@ -881,7 +881,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 395.5, 532.5, 177.0, 22.0 ],
-					"text" : "BHG2_C_Synth_Stab_12"
+					"text" : "Synth"
 				}
 
 			}
@@ -894,7 +894,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 20.5, 185.0, 87.0, 23.0 ],
+					"patching_rect" : [ 25.5, 180.0, 87.0, 23.0 ],
 					"text" : "readfolder $1"
 				}
 
@@ -1480,8 +1480,8 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 107.0, 514.857177734375, 151.0, 22.0 ],
-					"text" : "udpsend 172.30.4.79 6969"
+					"patching_rect" : [ 107.0, 514.857177734375, 165.0, 22.0 ],
+					"text" : "udpsend 172.30.44.193 6969"
 				}
 
 			}
@@ -1528,7 +1528,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 20.5, 127.0, 87.0, 44.0 ]
+					"patching_rect" : [ 25.5, 105.0, 87.0, 44.0 ]
 				}
 
 			}
@@ -1757,7 +1757,7 @@
 					"outlettype" : [ "", "", "", "", "", "", "" ],
 					"patching_rect" : [ 291.0, 322.0, 228.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"filename" : "commandParser.js",
+						"filename" : "commandParser",
 						"parameter_enable" : 0
 					}
 ,
@@ -2813,8 +2813,8 @@
 			}
  ],
 		"parameters" : 		{
-			"obj-237" : [ "live.gain~", "live.gain~", 0 ],
 			"obj-239" : [ "number", "number", 0 ],
+			"obj-237" : [ "live.gain~", "live.gain~", 0 ],
 			"parameterbanks" : 			{
 
 			}

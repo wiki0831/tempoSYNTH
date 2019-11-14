@@ -1,0 +1,18 @@
+{
+	"Channel 1"  : ["Piano",0,128],
+	"Channel 2"  : ["Drum",0,128],
+	"Channel 3"  : ["Ambient Swells",0,128],
+	"Channel 4"  : ["Guitar",0,128],
+	"Channel 5"  : ["Bright Mariamba",0,128]	,
+	"Channel 6"  : ["Flute Lead",0,128],
+	"Channel 7"  : ["Drift Pad",0,128],
+	"Channel 8"  : ["Steel Jazz",0,128],
+	"Channel 9"  : ["NULL",0,128],
+	"Channel 10" : ["NULL",0,128],
+	"Channel 11" : ["NULL",0,128],
+	"Channel 12" : ["NULL",0,128],
+	"Channel 13" : ["NULL",0,128],
+	"Channel 14" : ["NULL",0,128],
+	"Channel 15" : ["NULL",0,128],
+	"Channel 16" : ["NULL",0,128]
+}
