@@ -28,7 +28,7 @@ public class attachToTrack : MonoBehaviour
             if (Mathf.Abs(this.transform.position.x - lastPoint.position.x) < 0.3)
             {
                 this.transform.SetParent(lastPoint);
-                sound.addSound(this.name, int.Parse(lastPoint.name));
+                //sound.addSound(this.name, int.Parse(lastPoint.name));
                 status = this.name + "\n" + this.transform.parent.name;
                 statusDisp.GetComponent<Text>().text = status;
                 lastPoint = null;

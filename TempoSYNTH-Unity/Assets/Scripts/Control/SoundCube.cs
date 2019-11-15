@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Valve.VR;
 using Valve.VR.InteractionSystem;
 
 public class SoundCube : MonoBehaviour
 {
     private TextMesh locationUI;
     private TextMesh nameUI;
+    private TextMesh pitchUI;
+
     private Hand.AttachmentFlags attachmentFlags = Hand.defaultAttachmentFlags & (~Hand.AttachmentFlags.SnapOnAttach) & (~Hand.AttachmentFlags.DetachOthers) & (~Hand.AttachmentFlags.VelocityMovement);
     private Interactable interactable;
     private SoundManager sound;
+    private LinearMapping lm;
+
+    public int channel;
+    public int minPitch;
+    public int maxPitch;
+    public int curPitch;
+    public int velocity;
+    
+    private 
 
     //-------------------------------------------------
     void Awake()
@@ -19,31 +28,47 @@ public class SoundCube : MonoBehaviour
         var textMeshs = GetComponentsInChildren<TextMesh>();
         locationUI = textMeshs[0];
         nameUI = textMeshs[1];
+        pitchUI = textMeshs[2];
 
         interactable = this.GetComponent<Interactable>();
         sound = FindObjectOfType<SoundManager>();
+        lm = GetComponent<LinearMapping>();
+        curPitch = lmValueMapping(lm.value,minPitch,maxPitch);
     }
 
     private void Start()
     {
         locationUI.text = "";
         nameUI.text = this.name;
+        pitchUI.text = "Pitch: " + curPitch;
 
         locationUI.transform.rotation = Camera.main.transform.rotation;
         nameUI.transform.rotation = Camera.main.transform.rotation;
+        pitchUI.transform.rotation = Camera.main.transform.rotation;
     }
 
+    public void Update()
+    {
+        int newPitch = lmValueMapping(lm.value, minPitch, maxPitch);
+        if (curPitch != newPitch)
+        {
+            curPitch = newPitch;
+            pitchUI.text = "Pitch: " + String.Format("{0:000}", curPitch.ToString());
+            sound.PreviewSound(channel, curPitch, 100);
+        }
+    }
 
     private void OnHandHoverBegin(Hand hand)
     {
         if (this.transform.parent == null)
-        { sound.PreviewSound(this.name, 1); }
+        {
+            sound.PreviewSound(channel,curPitch, 100);
+        }
     }
 
     private void OnHandHoverEnd(Hand hand)
     {
-        //if (this.transform.parent == null)
-        //{ sound.PreviewSound(name, 0); }
+        sound.PreviewSound(channel, curPitch, 0);
     }
 
 
@@ -73,8 +98,11 @@ public class SoundCube : MonoBehaviour
             hand.HoverUnlock(interactable);
         }
 
+        
+
         locationUI.transform.rotation = Camera.main.transform.rotation;
         nameUI.transform.rotation = Camera.main.transform.rotation;
+        pitchUI.transform.rotation = Camera.main.transform.rotation;
     }
 
     private bool attached;
@@ -110,7 +138,7 @@ public class SoundCube : MonoBehaviour
             Quaternion initialRot = this.transform.rotation;
             Quaternion targetrot = Quaternion.LookRotation(lastPoint.parent.transform.position - transform.position);
 
-        float startTime = Time.time;
+            float startTime = Time.time;
             float overTime = 0.3f;
             float endTime = startTime + overTime;
 
@@ -122,7 +150,7 @@ public class SoundCube : MonoBehaviour
             if (Vector3.Distance(transform.position, lastPoint.position) < 0.01f)
             {
                 this.transform.SetParent(lastPoint);
-                sound.addSound(this.name, int.Parse(lastPoint.name));
+                sound.addSound(int.Parse(lastPoint.name),channel,curPitch,1000);
             }
 
             yield return null;
@@ -161,6 +189,7 @@ public class SoundCube : MonoBehaviour
         string res = a + ": " + b;
         return res;
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "TrackPosition")
@@ -179,12 +208,6 @@ public class SoundCube : MonoBehaviour
         }
     }
 
-    private bool lastHovering = false;
-    private void Update()
-    {
-
-    }
-
 
     //-------------------------------------------------
     // Called when this attached GameObject becomes the primary attached object
@@ -199,6 +222,12 @@ public class SoundCube : MonoBehaviour
     //-------------------------------------------------
     private void OnHandFocusLost(Hand hand)
     {
+    }
+
+    int lmValueMapping(float x, int minVal, int maxVal)
+    {
+        int y = (int)(x * (maxVal - minVal) + minVal);
+        return y;
     }
 }
 

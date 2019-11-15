@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Valve.VR.InteractionSystem;
+using System;
+
 
 public class ButtonExample : MonoBehaviour
     {
@@ -8,14 +10,18 @@ public class ButtonExample : MonoBehaviour
 
         public GameObject prefab;
         public float size;
-        public string name;
+        
         public bool randomColor = false;
         public float[] colorCode = { 0, 1, 0, 1, 0, 1, 0, 1 };
+
+        public string name;
         public TextMesh valueDisp;
+        public int channel;
+        public int minPitch;
+        public int maxPitch;
+        
 
-       
-
-        private void Start()
+    private void Start()
         {
             hoverButton.onButtonDown.AddListener(OnButtonDown);
             valueDisp = this.transform.parent.GetComponentInChildren<TextMesh>();
@@ -48,12 +54,13 @@ public class ButtonExample : MonoBehaviour
             GameObject planting = GameObject.Instantiate<GameObject>(prefab);
             planting.transform.position = this.transform.position;
             planting.transform.rotation = this.transform.rotation;
-
+            
             if (randomColor == true)
             {
-                Color newColor = Random.ColorHSV(colorCode[0], colorCode[1], colorCode[2], colorCode[3], colorCode[4], colorCode[5], colorCode[6], colorCode[7]);
+                Color newColor = UnityEngine.Random.ColorHSV(colorCode[0], colorCode[1], colorCode[2], colorCode[3], colorCode[4], colorCode[5], colorCode[6], colorCode[7]);
                 planting.GetComponent<Renderer>().material.color = newColor;
             }
+
             planting.name = name;
             Vector3 initialScale = Vector3.one * 0.01f;
             Vector3 targetScale = Vector3.one * size;
