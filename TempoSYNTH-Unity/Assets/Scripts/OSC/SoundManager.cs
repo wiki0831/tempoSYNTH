@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,7 +13,7 @@ public class SoundManager : MonoBehaviour
     public int BPM = 140;
     Dictionary<string, GameObject> notesParse = new Dictionary<string, GameObject>();
     public List<string> fileName;
-    public ButtonExample[] soundResCues;
+    public CubeRespawn[] soundResCues;
 
     // Start is called before the first frame update
     private void Start()
@@ -19,23 +21,35 @@ public class SoundManager : MonoBehaviour
         osc = this.GetComponent<OSC>();
         osc.SetAddressHandler("/metro", ColorOnPlay);
         osc.SetAddressHandler("/file", FileOnLoad);
-        soundResCues = GameObject.FindGameObjectWithTag("SoundSpawnController").GetComponentsInChildren<ButtonExample>();
+        soundResCues = GameObject.FindGameObjectWithTag("SoundSpawnController").GetComponentsInChildren<CubeRespawn>();
         InitParse();
         UpdateState(true);
         UpdateBPM(BPM);
     }
+
     private void FileOnLoad(OscMessage message) {
         string a = message.ToString();
-        a = a.Remove(a.IndexOf("/file "), "/file ".Length);
-        if (!a.Contains("tempoSynth."))
-        {
-            if (!fileName.Contains(a)) {
-               fileName.Add(a);
+        a = a.Remove(a.IndexOf("/file Channel "), "/file Channel ".Length);
+        List<string> numericList = a.Split(' ').ToList();
 
-               soundResCues[fileName.Count-1].name = a;
-               soundResCues[fileName.Count - 1].valueDisp.text = a;
-            }
+        string name = Regex.Replace(a, @"[\d-]", string.Empty);
+        
+        Debug.Log(name);
+        
+        int chanel = int.Parse(numericList[0]);
+        int min = int.Parse(numericList[numericList.Count-2]);
+        int max = int.Parse(numericList[numericList.Count-1]);
+        Debug.Log(chanel+" "+min+" "+max);
+
+        if (chanel <= 8)
+        {
+            soundResCues[chanel-1].name = name;
+            soundResCues[chanel-1].valueDisp.text = name;
+            soundResCues[chanel - 1].channel = chanel;
+            soundResCues[chanel - 1].minPitch = min;
+            soundResCues[chanel - 1].maxPitch = max;
         }
+
     }
 
     private void ColorOnPlay(OscMessage message)
@@ -88,6 +102,7 @@ public class SoundManager : MonoBehaviour
             osc.Send(message);
         }
     }
+
     public void updateVolume(string name, int state)
     {
 
@@ -98,6 +113,7 @@ public class SoundManager : MonoBehaviour
         message.values.Add(state);
         osc.Send(message);
     }
+
     private void resetMax()
     {
         OscMessage message;
@@ -106,13 +122,17 @@ public class SoundManager : MonoBehaviour
         osc.Send(message);
     }
 
-    public void addSound(string name, int loc)
+    public void addSound(int loc, int channel, int pitch, int dur)
     {
         OscMessage message;
         message = new OscMessage();
         message.address = "AddSound";
-        message.values.Add(name);
+        
         message.values.Add(loc);
+        message.values.Add(channel);
+        message.values.Add(pitch);
+        message.values.Add(dur);
+
         osc.Send(message);
     }
 
@@ -136,13 +156,14 @@ public class SoundManager : MonoBehaviour
         osc.Send(message);
     }
 
-    public void PreviewSound(string name,  int state) {
+    public void PreviewSound(int channel, int pitch, int duration) {
 
         OscMessage message;
         message = new OscMessage();
         message.address = "PreviewSound";
-        message.values.Add(name);
-        message.values.Add(state);
+        message.values.Add(channel);
+        message.values.Add(pitch);
+        message.values.Add(duration);
         osc.Send(message);
     }
 

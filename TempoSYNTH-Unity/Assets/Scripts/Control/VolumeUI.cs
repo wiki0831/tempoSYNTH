@@ -21,7 +21,7 @@ public class VolumeUI : MonoBehaviour
     {
         valueDisp = GetComponent<TextMesh>();
         lm = GetComponent<LinearMapping>();
-        curVal = valueMapping(lm.value);
+        curVal = lmValueMapping(lm.value,minVal,maxVal);
         valueDisp.text = "Pitch: " + String.Format("{0:000}", curVal.ToString());
     }
     private void HandHoverUpdate(Hand hand)
@@ -37,7 +37,7 @@ public class VolumeUI : MonoBehaviour
 
         if (curstate)
         {
-            int newBPM = valueMapping(lm.value);
+            int newBPM = lmValueMapping(lm.value,minVal,maxVal);
             if (curVal != newBPM)
             {
                 curVal = newBPM;
@@ -47,7 +47,7 @@ public class VolumeUI : MonoBehaviour
 
     }
 
-    int valueMapping(float x)
+    int lmValueMapping(float x,int minVal, int MaxVal)
     {
         int y = (int)(Math.Round(x, 3) * (maxVal - minVal) + minVal);
         return y;

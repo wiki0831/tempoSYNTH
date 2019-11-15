@@ -23,8 +23,6 @@ public class TouchpadInput : MonoBehaviour
         
     }
 
-    
-
     private void Update()
     {
         if (interactable.attachedToHand)
