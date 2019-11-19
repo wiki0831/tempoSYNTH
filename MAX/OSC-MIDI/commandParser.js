@@ -11,32 +11,25 @@ setoutletassist(5,"Init");
 setoutletassist(6,"Volume Port");
 
 
-
-post("Init");
-
-var soundMatrixLength = 16;
-var wei = "hello";
+var numChannels = 5;
+var soundLength = 16;
 var soundMatrix = new Array();
-for (var i = 0; i < soundMatrixLength; i++) {
-	soundMatrix[i] = new Array();
-}
 
+Init();
 
-function resetMatrix(){
-	soundMatrix = new Array();
-	for (var i = 0; i < soundMatrixLength; i++) {
+function Init(){
+	post("Init\n");
+	for (var i = 0; i < numChannels; i++) {
 		soundMatrix[i] = new Array();
+		for (var j = 0; j < soundLength; j++){
+			soundMatrix[i][j] = new Array();
+		}
 	}
 	outlet(5,1);
 }
 
-function bang() {
-  if (wei == "hello") {
-    wei = "what";
-  } else {
-    wei = "hello";
-  }
-  outlet(0, wei);
+function resetMatrix(){
+	Init();
 }
 
 function State(state) {
@@ -49,43 +42,76 @@ function BPM(bpmVal) {
   }
 }
 
-function AddSound(colum, chanel, pitch, vel, dur) {
-	cursound = [chanel, pitch, vel, dur]
-	post(1);
-  if (soundMatrix[colum].indexOf(cursound) == -1) {
-    soundMatrix[colum].push(cursound);
-  }
-  outlet(3, "Add Channel " + chanel + " at " + colum);
-}
-
-function RemoveSound(nam, colum) {
-	var loc = soundMatrix[colum].indexOf(nam);
-  if (loc != -1) {
-    soundMatrix[colum].splice(loc,1);
-  }
-  outlet(3, "Remove Channel " +nam + " at " + colum);
-}
-
 function PreviewSound(chanel, pitch, velocity){
 	outlet(4,[chanel, pitch, velocity]);
 }
 
+function AddSound(colum, chanel, pitch, vel, dur) {
+	cursound = [pitch, vel, dur]
+
+  	if (soundMatrix[chanel][colum].length == 0) {
+    soundMatrix[chanel][colum].push(cursound);
+	outlet(3,"Channel "+chanel+" is Empty, adding: " + cursound)
+	return;
+  	}
+
+	if (soundMatrix[chanel][colum].length != 0){
+	for (var i = 0; i < soundMatrix[chanel][colum].length; i++) {
+		if(soundMatrix[chanel][colum][i][0] == pitch){
+			outlet(3,"Channel "+chanel+" exist Duplicate:" + cursound);
+			return;
+		}
+	}	
+		soundMatrix[chanel][colum].push(cursound);
+		outlet(3,"Channel "+chanel+" polyphony, adding: " + cursound)
+		
+	}
+}
+
+function RemoveSound(colum, chanel, pitch) {
+	
+
+	if (soundMatrix[chanel][colum].length == 0) {
+	outlet(3,"Channel "+chanel+" is Empty, nothing to remove")
+	return;
+  	}
+	if (soundMatrix[chanel][colum].length != 0){
+	for (var i = 0; i < soundMatrix[chanel][colum].length; i++) {
+		if(soundMatrix[chanel][colum][i][0] == pitch){
+			soundMatrix[chanel][colum].splice(i,1);
+		  	outlet(3, "Remove Channel: " +chanel + ", at: " + colum + ", with pitch:" + pitch);
+			return;
+		}
+	}
+	}
+	outlet(3, "Remove Sound Fail, element not found")
+}
+
+
 function PrintColumn(colum) {
   var output = [];
-  for (var j = 0; j < soundMatrix[colum].length; j++) {
-    output.push(soundMatrix[colum][j].join(' '));
-  }
+  for (var i = 0; i < soundMatrix.length; i++) {
+	
+	for(var j = 0; j < soundMatrix[i][colum].length; j++){
+		var midi = [];
+		midi.push(i);
+		midi.push(soundMatrix[i][colum][j].join(' '));
+		output.push(midi.join(' '));
+  		}
+	}
+  if(output.length > 0){
   outlet(2, [output.join(";")]);
+  }
 }
 
 function PrintMatrix() {
   var output = "";
   for (var i = 0; i < soundMatrix.length; i++) {
-    output = output + " column :" + i+" : ";
+    output = output + " Channel :" + i+"\n";
 
     for (var j = 0; j < soundMatrix[i].length; j++) {
 		
-		output = output + "Sound:"
+		output = output
 		
 		for (var k = 0; k < soundMatrix[i][j].length; k++) {
       		output = output + " "+ soundMatrix[i][j][k];
