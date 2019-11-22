@@ -48,7 +48,7 @@ public class attachToTrack : MonoBehaviour
     {
         if (other.tag == "TrackPosition")
         {
-            sound.removeSound(this.name, int.Parse(other.name));
+            //sound.removeSound(this.name, int.Parse(other.name));
             this.transform.SetParent(null);
             status = this.name + "\n" + this.transform.parent.name;
             statusDisp.GetComponent<Text>().text = status;

@@ -34,12 +34,12 @@ public class SoundManager : MonoBehaviour
 
         string name = Regex.Replace(a, @"[\d-]", string.Empty);
         
-        Debug.Log(name);
+     //   Debug.Log(name);
         
         int chanel = int.Parse(numericList[0]);
         int min = int.Parse(numericList[numericList.Count-2]);
         int max = int.Parse(numericList[numericList.Count-1]);
-        Debug.Log(chanel+" "+min+" "+max);
+        //Debug.Log(chanel+" "+min+" "+max);
 
         if (chanel <= 8)
         {
@@ -136,13 +136,14 @@ public class SoundManager : MonoBehaviour
         osc.Send(message);
     }
 
-    public void removeSound(string name, int loc)
+    public void removeSound(int loc, int channel, int pitch)
     {
         OscMessage message;
         message = new OscMessage();
         message.address = "RemoveSound";
-        message.values.Add(name);
         message.values.Add(loc);
+        message.values.Add(channel);
+        message.values.Add(pitch);
         osc.Send(message);
     }
 
