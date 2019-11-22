@@ -14,11 +14,14 @@ public class SoundCube : MonoBehaviour
     private SoundManager sound;
     private LinearMapping lm;
 
+    private Transform lastPoint;
+
     public int channel;
     public int minPitch;
     public int maxPitch;
     public int curPitch;
     public int velocity;
+    public string location;
     
     private 
 
@@ -34,6 +37,7 @@ public class SoundCube : MonoBehaviour
         sound = FindObjectOfType<SoundManager>();
         lm = GetComponent<LinearMapping>();
         curPitch = lmValueMapping(lm.value,minPitch,maxPitch);
+        location = null;
     }
 
     private void Start()
@@ -52,9 +56,15 @@ public class SoundCube : MonoBehaviour
         int newPitch = lmValueMapping(lm.value, minPitch, maxPitch);
         if (curPitch != newPitch)
         {
+                if (location != null)
+                {
+                    sound.removeSound(int.Parse(lastPoint.name), this.channel, this.curPitch);
+                    sound.addSound(int.Parse(lastPoint.name), this.channel, newPitch, 1000);
+                }
+            
             curPitch = newPitch;
-            pitchUI.text = "Pitch: " + String.Format("{0:000}", curPitch.ToString());
             sound.PreviewSound(channel, curPitch, 100);
+            pitchUI.text = "Pitch: " + String.Format("{0:000}", curPitch.ToString());
         }
     }
 
@@ -147,9 +157,10 @@ public class SoundCube : MonoBehaviour
                 this.transform.position = Vector3.Slerp(initialScale, targetScale, (Time.time - startTime) / overTime);
                 this.transform.rotation = Quaternion.Slerp(initialRot, targetrot, (Time.time - startTime) / overTime);
 
-            if (Vector3.Distance(transform.position, lastPoint.position) < 0.01f)
+            if (Vector3.Distance(transform.position, lastPoint.position) < 0.01f & location == null)
             {
                 this.transform.SetParent(lastPoint);
+                location = lastPoint.name;
                 sound.addSound(int.Parse(lastPoint.name),channel,curPitch,1000);
             }
 
@@ -163,7 +174,7 @@ public class SoundCube : MonoBehaviour
     {
     }
 
-    private Transform lastPoint;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -198,9 +209,11 @@ public class SoundCube : MonoBehaviour
             {
                 //sound.removeSound(this.name, int.Parse(other.name));
                 locationUI.text = null;
-                if (lastPoint != null)
+                if (lastPoint != null && location != null)
                 {
-                    sound.removeSound(this.name, int.Parse(lastPoint.name));
+                    Debug.Log("removed");
+                    location = null;
+                    sound.removeSound(int.Parse(lastPoint.name),this.channel,this.curPitch);
                 }
                 lastPoint = null;
                 
