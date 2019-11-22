@@ -11,7 +11,7 @@ setoutletassist(5,"Init");
 setoutletassist(6,"Volume Port");
 
 
-var numChannels = 5;
+var numChannels = 17;
 var soundLength = 16;
 var soundMatrix = new Array();
 
